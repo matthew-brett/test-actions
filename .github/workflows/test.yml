@@ -5,10 +5,14 @@ jobs:
   check-permissions:
     runs-on: ubuntu-latest
     steps:
-      - name: Set up Python 3.11
-        uses: actions/setup-python@v2
-        with:
-          python-version: 3.11
-      - run: touch cloth
-      - run: python -c "import os; os.chmod('cloth', 0o200)"
-      - run: python -c "open('cloth', 'rb').read()"
+    - name: Checkout source code
+      uses: actions/checkout@v2
+    - run: touch unreadable0
+    - run: python -c "import os; os.chmod('unreadable0', 0o200)"
+    # The next line, as we would expect, fails.
+    # - run: python -c "open('unreadable0', 'rb').read()"
+    - name: Run tox tests
+      id: test
+      uses: fedora-python/tox-github-action@main
+      with:
+        tox_env: py311
