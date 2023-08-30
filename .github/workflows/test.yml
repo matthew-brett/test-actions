@@ -1,0 +1,14 @@
+name: Minimal test
+run-name: Minimal test
+on: [push]
+jobs:
+  check-permissions:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Set up Python 3.11
+        uses: actions/setup-python@v2
+        with:
+          python-version: 3.11
+      - run: touch cloth
+      - run: python -c "import os; os.chmod('cloth', 0o200)"
+      - run: python -c "open('cloth', 'rb').read()"
