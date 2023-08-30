@@ -15,4 +15,4 @@ jobs:
       id: test
       uses: fedora-python/tox-github-action@main
       with:
-        tox_env: py311
+        tox_env: py310
