@@ -5,10 +5,16 @@ jobs:
   check-permissions:
     runs-on: ubuntu-latest
     steps:
-    - name: Checkout source code
-      uses: actions/checkout@v2
-    - name: Run tox tests
-      id: test
-      uses: fedora-python/tox-github-action@main
-      with:
-        tox_env: py310
+    - name: branch-to-book
+      run: |
+        branch="${GITHUB_HEAD_REF:-${GITHUB_REF#refs/heads/}}"
+        if [ "$branch" == 'main' ]; then
+          echo "BOOK_SUFFIX=latest" >> $GITHUB_ENV
+        elif [[ "$branch" =~ ^edition* ]]; then
+          echo "BOOK_SUFFIX=$branch" >> $GITHUB_ENV
+        fi
+    - name: Test
+      run: echo "Book suffix is '$BOOK_SUFFIX'"
+    - name: Test 2
+      if: env.BOOK_SUFFIX != ''
+      run: echo "Book suffix is not empty"
